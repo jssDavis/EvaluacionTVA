@@ -1,9 +1,9 @@
-# Proyecto ASP.NET MVC - Evaluación - Gestión de Ventas
+# Proyecto ASP.NET MVC - Evaluación - Gestión de Ventas. Candidato: Jesús David Anastacio Vázquez.
 
 ## Descripción
 
-Este proyecto es una aplicación web de gestión de ventas utilizando el framework ASP.NET MVC con .NET Framework. Candidato: Jesús David Anastacio Vázquez.
-  
+Este proyecto es una aplicación web de gestión de ventas utilizando el framework ASP.NET MVC con .NET Framework. 
+
 ## Requisitos
 
 Para ejecutar este proyecto, necesitas:
