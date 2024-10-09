@@ -1,0 +1,106 @@
+﻿@model EvaluacionTVA.Models.NuevaVentaModelo
+
+<h3>Agregar Venta</h3>
+
+<form method="post" action="@Url.Action("AgregarVenta", "Venta")">
+    <div class="form-group">
+        <label>Cliente</label>
+        @Html.DropDownList("ClienteId", (SelectList)ViewBag.Clientes, "Seleccione un cliente", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        <label>Producto</label>
+        @Html.DropDownList("ProductoId", (SelectList)ViewBag.Productos, "Seleccione un producto", new { @class = "form-control", @id = "ProductoId" })
+    </div>
+
+    <div class="form-group">
+        <label>Cantidad</label>
+        <input type="number" id="cantidadProducto" name="cantidadProducto" class="form-control" min="1" value="1" />
+    </div>
+
+    <!-- Tabla que mostrará los detalles de la venta -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Costo Unitario</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody id="ventaDetalle">
+            <tr>
+                <td id="nombreProducto">Seleccione un producto</td>
+                <td id="cantidadProductoTabla">0</td>
+                <td id="costoUnitarioTabla">$0.00</td>
+                <td id="totalProductoTabla">$0.00</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="form-group">
+        <label>Total de la Venta: </label>
+        <span id="totalVenta">$0.00</span>
+    </div>
+
+    <!-- Input oculto para enviar los detalles -->
+    <input type="hidden" id="ProductoIdHidden" name="Detalles[0].ProductoId" />
+    <input type="hidden" id="CantidadHidden" name="Detalles[0].Cantidad" />
+    <input type="hidden" id="CostoUnitarioHidden" name="Detalles[0].CostoUnitario" />
+    <input type="hidden" id="TotalHidden" name="Detalles[0].Total" />
+
+    <button type="submit" class="btn btn-success">Guardar Venta</button>
+</form>
+
+<script>
+    // Variable para almacenar los productos y sus costos unitarios
+    var productos = @Html.Raw(Json.Encode(ViewBag.ProductosData)); // Datos de los productos como JSON.
+
+    // Actualizar el costo unitario y calcular el total al seleccionar el producto
+    $('#ProductoId').on('change', function() {
+        var productoId = $(this).val(); // Obtener el id del producto seleccionado
+        var productoSeleccionado = productos.find(p => p.ProductoId == productoId); // Encontrar el producto en la lista
+
+        if (productoSeleccionado) {
+            var costoUnitario = productoSeleccionado.CostoUnitario;
+            var nombreProducto = productoSeleccionado.Descripcion;
+
+            // Actualizar la tabla con los datos del producto seleccionado
+            $('#nombreProducto').text(nombreProducto);
+            $('#costoUnitarioTabla').text("$" + parseFloat(costoUnitario).toFixed(2));
+
+            // Asignar el ProductoId al input oculto para enviarlo
+            $('#ProductoIdHidden').val(productoId);
+
+            // Obtener la cantidad actual para recalcular el total
+            var cantidad = $('#cantidadProducto').val();
+            var total = parseFloat(costoUnitario) * parseInt(cantidad);
+
+            // Actualizar la tabla
+            $('#cantidadProductoTabla').text(cantidad);
+            $('#totalProductoTabla').text("$" + total.toFixed(2));
+            $('#totalVenta').text("$" + total.toFixed(2));
+
+            // Asignar valores ocultos para enviarlos
+            $('#CantidadHidden').val(cantidad);
+            $('#CostoUnitarioHidden').val(costoUnitario);
+            $('#TotalHidden').val(total);
+        }
+    });
+
+    // Calcular el total cuando la cantidad cambia
+    $('#cantidadProducto').on('input', function() {
+        var cantidad = $(this).val();
+        var costoUnitario = $('#costoUnitarioTabla').text().replace('$', '').trim();
+        var total = parseFloat(costoUnitario) * parseInt(cantidad);
+
+        // Actualizar la tabla
+        $('#cantidadProductoTabla').text(cantidad);
+        $('#totalProductoTabla').text("$" + total.toFixed(2));
+        $('#totalVenta').text("$" + total.toFixed(2));
+
+        // Actualizar los valores ocultos
+        $('#CantidadHidden').val(cantidad);
+        $('#TotalHidden').val(total);
+    });
+</script>

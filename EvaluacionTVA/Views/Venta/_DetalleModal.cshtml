@@ -1,0 +1,22 @@
+﻿@model IEnumerable<EvaluacionTVA.Models.VentaDetalleModelo> 
+<table class="table">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Costo Unitario</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var detalle in Model)
+        {
+            <tr>
+                <td>@detalle.Producto</td>
+                <td>@detalle.Cantidad</td>
+                <td>@detalle.CostoUnitario</td>
+                <td>@detalle.Total</td>
+            </tr>
+        }
+    </tbody>
+</table>

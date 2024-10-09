@@ -1,0 +1,122 @@
+﻿@model IEnumerable<EvaluacionTVA.Models.VistaComprasPorCliente>
+@{
+    ViewBag.Title = "Ventas por Cliente";
+}
+
+<h2>Ventas por Cliente</h2>
+
+<!-- Filtros -->
+<form method="get">
+    <input type="text" name="nombre" placeholder="Nombre del cliente" />
+    <input type="text" name="clave" placeholder="Clave de cliente" />
+    <select name="estatus">
+        <option value="">Todos</option>
+        <option value="ACTIVO">Activo</option>
+        <option value="INACTIVO">Inactivo</option>
+    </select>
+    <button type="submit">Buscar</button>
+</form>
+
+<!-- Tabla de resultados -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>Clave Cliente</th>
+            <th>Cliente</th>
+            <th>Mail</th>
+            <th>Fecha Venta</th>
+            <th>Total Venta</th>
+            <th>Detalle</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var venta in Model)
+        {
+            <tr>
+                <td>@venta.ClaveCliente</td>
+                <td>@venta.Cliente</td>
+                <td>@venta.Mail</td>
+                <td>@venta.FechaVenta.ToString("dd/MM/yyyy")</td>
+                <td>@venta.TotalVenta.ToString("C")</td>
+                <td>
+                    <a href="javascript:void(0);" data-toggle="modal" data-target="#detalleModal"
+                       onclick="mostrarDetalle(@venta.VentaId)">Ver Detalle</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Botón para agregar venta -->
+<button class="btn btn-primary" data-toggle="modal" data-target="#agregarVentaModal"  onclick="agregarVentaModal()">Agregar Venta</button>
+
+
+<!-- Modal para agregar venta -->
+<div id="agregarVentaModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+           
+        </div>
+    </div>
+</div>
+
+<!-- Modal para mostrar detalle de venta -->
+<div id="detalleModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+
+
+    function mostrarDetalle(ventaId) {
+        $.ajax({
+            url: '@Url.Action("Detalle", "Venta")', // Llamas a la acción del controlador
+            type: 'GET',
+            data: { ventaId: ventaId }, // Pasas el ID de la venta
+            success: function (data) {
+                console.log(data);
+                // Inserta el contenido en el modal
+                $('#agregarVentaModal .modal-content').html(data);
+                // Muestra el modal
+                $('#agregarVentaModal').modal('hide');
+                $('#agregarVentaModal').modal('show');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Error en la llamada AJAX:", textStatus, errorThrown);
+                alert("Error al obtener los detalles.");
+            }
+        });
+    }
+
+    function agregarVentaModal() {
+        $.ajax({
+            url: '@Url.Action("AgregarVentaModal", "Venta")', // Llamas a la acción del controlador
+            type: 'GET',
+            success: function (data) {
+                console.log(data);
+                // Inserta el contenido en el modal
+                $('#detalleModal .modal-content').html(data);
+                // Muestra el modal
+                $('#detalleModal').modal('hide');
+                $('#detalleModal').modal('show');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Error en la llamada AJAX:", textStatus, errorThrown);
+                alert("Error al obtener los detalles.");
+            }
+        });
+    }
+
+
+</script>
