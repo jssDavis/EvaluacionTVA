@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Este proyecto es una aplicación web de gestión de ventas utilizando el framework ASP.NET MVC con .NET Framework. 
+Este proyecto es una aplicación web de gestión de ventas utilizando el framework ASP.NET MVC con .NET Framework. Candidato: Jesús David Anastacio Vázquez.
   
 ## Requisitos
 
